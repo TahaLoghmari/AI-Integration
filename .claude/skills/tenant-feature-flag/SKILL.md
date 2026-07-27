@@ -1,7 +1,6 @@
 ---
 name: tenant-feature-flag
 description: Use this skill when asked to add a **new tenant-level feature flag** — a per-tenant boolean configuration that gates behaviour in the backend and/or frontend. This is distinct from a region-level or global App Configuration feature flag.
-disable-model-invocation: true
 ---
 
 # Skill: Add a Tenant-Level Feature Flag

@@ -1,7 +1,3 @@
-Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
-
-**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
-
 ## 1. Think Before Coding
 
 **Don't assume. Don't hide confusion. Surface tradeoffs.**
@@ -47,9 +43,11 @@ The test: Every changed line should trace directly to the user's request.
 
 **Define success criteria. Loop until verified.**
 
+> Always Invoke the `/tdd` skill when implementing something that requires tests.
+
 Transform tasks into verifiable goals:
 
-- "Add validation" → "Write tests for invalid inputs, then make them pass", use test-driven-development skill when doing so.
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
 - "Fix the bug" → "Write a test that reproduces it, then make it pass"
 - "Refactor X" → "Ensure tests pass before and after"
 
@@ -73,9 +71,9 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 Delegate liberally to as many subagents as needed, in parallel when possible — spawn as many as needed to keep the main context focused on coordination and implementation.
 
-- Codebase reading (understanding features, finding patterns, locating files) → `codebase-explorer` agent
-- External information (docs, APIs, libraries) → `web-search` agent
-- Independent implementation subtasks → `subagent-driven-development` skill
+- For Codebase reading/exploration (understanding features, finding patterns, locating files) → invoke the `codebase-explorer` agent
+- For External information (docs, APIs, libraries) → invoke the `web-search` agent
+- For Figma UI Fetching using MCP → invoke the `figma-fetcher` agent
 
 ### Issue tracker
 

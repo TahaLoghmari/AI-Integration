@@ -1,12 +1,62 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash"  
+    ],
+    "ask": [
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git stash:*)",
+      "Bash(git reset:*)",
+      "Bash(git rebase:*)",
+      "Bash(git checkout:*)",
+      "Bash(git merge:*)",
+      "Bash(git clean:*)",
+      "Bash(rm:*)",
+      "Bash(mv:*)",
+      "Bash(sudo:*)",
+      "Bash(chmod:*)",
+      "Bash(chown:*)",
+      "Bash(kill:*)",
+      "Bash(docker:*)",
+      "Bash(rm -rf /:*)",
+      "Bash(rm -rf ~:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push * --force:*)",
+      "Bash(curl * | sh:*)",
+      "Bash(wget * | sh:*)"
+    ],
+    "deny": [
+      "Agent(Explore)",
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "DesignSync",
+      "NotebookEdit",
+      "SendMessage",
+      "PushNotification",
+      "RemoteTrigger",
+      "ReportFindings",
+      "ScheduleWakeup",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "Artifact",
+      "Monitor",
+      "SendUserFile",
+      "ShareOnboardingGuide",
+      "Workflow",
+      "EnterWorktree",
+      "ExitWorktree"
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "bash .claude/statusline.sh"
   },
-  "enabledPlugins": {
-    "skill-creator@claude-plugins-official": true
-  },
-  "permissions": {
-    "deny": ["Agent(Explore)", "Agent(general-purpose)"]
-  }
+  "disableBundledSkills": true,
+  "disableWorkflows": true,
+  "disableRemoteControl": true,
+  "disableClaudeAiConnectors": true,
+  "disableArtifact": true,
+  "autoMemoryEnabled": false
 }
