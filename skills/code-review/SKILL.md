@@ -55,3 +55,7 @@ A change can pass one axis and fail the other:
 - Code that does exactly what the issue asked but breaks the project's conventions → **Spec pass, Standards fail.**
 
 Reporting them separately stops one axis from masking the other.
+
+## Important note
+
+Both sub-agents should only report findings that are genuinely impactful and worth acting on. Skip nitpicks, stylistic preferences, or issues raised just to have something to say. There's no quota to fill and no bias toward finding problems: if the code is solid on an axis, the sub-agent should say so plainly and report no findings there.
