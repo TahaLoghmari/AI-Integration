@@ -1,10 +1,10 @@
 ---
 name: task-implemented
-description: Writes task-implemented.md at the repo root, summarizing the task just completed for a reviewer — no ticket needed. Invoke by name after finishing implementation work.
+description: Writes task-implemented.md at the repo root, summarizing the task just completed for a reviewer. Use when the user wants to create a record of what was actually implemented, so the code-review skill has something to review against.
 disable-model-invocation: true
 ---
 
-Reconstructs a ticket after the fact, from the conversation instead of a written spec, so the code-review skill always has something to review against.
+There's no written ticket — the conversation is the task implemented. Recover it, so the code-review skill has something to review against."
 
 ## Steps
 
