@@ -15,7 +15,7 @@ The issue tracker should have been provided to you.
 
 ### Pass 1: Code Quality & Regression
 
-Re-read the diff (the full diff command and commit list) with only this lens active. Do not consult the spec/issue during this pass.
+Re-read the diff (the full diff command and commit list) with only this lens active. Do not consult the spec/issue during this pass. Check the diff against CODING_STANDARDS.md for this repo's coding standards.
 
 Report: per file/hunk where relevant:
 (a) every place the diff violates a standard: cite the standard (the rule);
