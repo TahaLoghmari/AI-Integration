@@ -14,6 +14,14 @@ Both axes are reviewed **directly, one at a time, in separate passes**: do not b
 
 The issue tracker should have been provided to you.
 
+### Findings bar
+
+Both passes report only findings that are **impactful and worth acting on**: ones a senior reviewer would request changes on before merge. Nitpicks and stylistic preferences fall below that bar; leave them out.
+
+Review **neutrally**: the goal is an accurate verdict, not a list of problems. There is no quota, and a clean axis is as valuable a result as a flawed one. When an axis has nothing above the bar, report "No findings" for it plainly, without padding it with minor points.
+
+Dispatch exploration subagents for the legwork outside the diff (tracing the callers, tests, and interfaces a hunk touches), and keep the judgement for both passes in this context.
+
 ### Pass 1: Code Quality & Regression
 
 Re-read the diff (the full diff command and commit list) with only this lens active. Do not consult the spec/issue during this pass. Check the diff against CODING_STANDARDS.md for this repo's coding standards.
@@ -42,8 +50,6 @@ Common smells to look for:
 - **Refused Bequest**: a subclass or implementer that ignores or overrides most of what it inherits. → drop the inheritance, use composition.
 - **Regression / Behaviour Break**: existing functionality that the change can break, including changed contracts, altered control flow, invalid assumptions about callers/data, error-handling regressions, state/lifecycle issues, compatibility problems, or behavior that existing tests/call sites rely on. → verify the affected code paths and report the concrete breakage or credible failure scenario.
 
-If the code is solid on this axis, say so plainly and report no findings: there's no quota to fill and no bias toward finding problems. Skip nitpicks, stylistic preferences, or issues raised just to have something to say.
-
 Write this pass's findings up in full before moving on.
 
 ### Pass 2: Spec
@@ -51,8 +57,6 @@ Write this pass's findings up in full before moving on.
 Now re-read the diff again (same diff command and commit list), this time against the path or fetched contents of the spec. Set aside the Code Quality & Regression findings while doing this: don't let them shape what you flag here.
 
 Report: (a) requirements the spec asked for that are missing or partial; (b) behaviour in the diff that wasn't asked for (scope creep); (c) requirements that look implemented but where the implementation looks wrong. Quote the spec line for each finding. Under 400 words.
-
-If the code fully matches the spec, say so plainly and report no findings.
 
 If the spec is missing, skip this pass and note this in the final report.
 
@@ -70,9 +74,3 @@ A change can pass one axis and fail the other:
 - Code that does exactly what the issue asked but breaks the project's conventions or an existing functionality → **Code Quality & Regression fail, Spec pass.**
 
 Reporting them separately, and reviewing them in separate passes, stops one axis from masking the other.
-
-## Important note
-
-Only report findings that are genuinely impactful and worth acting on. Skip nitpicks, stylistic preferences, or issues raised just to have something to say. There's no quota to fill and no bias toward finding problems: if the code is solid on an axis, say so plainly and report no findings there.
-
-Delegate to as many exploration subagents as needed to assist you with exploration.

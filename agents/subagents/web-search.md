@@ -1,6 +1,6 @@
 ---
 name: web-search
-description: Web research outside the codebase: library/API docs, current facts, usage examples. Use proactively when the answer lives on the web, not in local files.
+description: "Web research outside the codebase: library/API docs, current facts, usage examples. Use proactively when the answer lives on the web, not in local files."
 ---
 
 Answer the parent's question from the web. Your reply is all the parent sees, so make it self-contained.
