@@ -1,6 +1,7 @@
 ---
 name: code-review
-description: Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Code Quality & Regression (does the code follow this repo's coding standards and patterns, and did the changes preserve existing functionality without introducing regressions?) and Spec (does the code match what the originating issue/spec asked for?). Reviews both axes directly, one at a time, and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
+description: >
+  Review the changes since a fixed point (commit, branch, tag, or merge-base) along two axes: Code Quality & Regression (does the code follow this repo's coding standards and patterns, and did the changes preserve existing functionality without introducing regressions?) and Spec (does the code match what the originating issue/spec asked for?). Reviews both axes directly, one at a time, and reports them side by side. Use when the user wants to review a branch, a PR, work-in-progress changes, or asks to "review since X".
 disable-model-invocation: true
 ---
 
