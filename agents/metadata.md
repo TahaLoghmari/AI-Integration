@@ -2,16 +2,15 @@
 
 ### Opencode
 
-```jsx
-mode: subagent;
-reasoningEffort: medium; // If using OpenAI
-model: github - copilot / claude - sonnet - 4.6 || openai / gpt - 5.6 - luna;
-permission: read: allow;
-grep: allow;
-glob: allow;
-lsp: allow;
-bash: allow;
-lsp: allow;
+```txt
+mode: subagent
+model: openai/gpt-5.6-luna
+permission:
+  read: allow
+  grep: allow
+  glob: allow
+  lsp: allow
+  bash: allow
 ```
 
 ### Claude Code
@@ -24,37 +23,16 @@ effort: `medium`;
 
 ---
 
-## figma-fetcher
-
-### Opencode
-
-```jsx
-mode: subagent;
-reasoningEffort: medium; // If using OpenAI
-model: github - copilot / claude - sonnet - 4.6 || openai / gpt - 5.6 - luna;
-permission: webfetch: allow;
-```
-
-### Claude Code
-
-```jsx
-tools: WebFetch;
-model: claude - sonnet - 4 - 6;
-effort: `medium`;
-```
-
----
-
 ## web-search
 
 ### Opencode
 
-```jsx
-mode: subagent;
-reasoningEffort: medium; // If using OpenAI
-model: github - copilot / claude - sonnet - 4.6 || openai / gpt - 5.6 - luna;
-permission: webfetch: allow;
-websearch: allow;
+```txt
+mode: subagent
+model: openai/gpt-5.6-terra
+permission:
+  webfetch: allow
+  websearch: allow
 ```
 
 ### Claude Code
@@ -66,6 +44,15 @@ effort: `medium`;
 ```
 
 ## db-query
+
+### Opencode
+
+```txt
+mode: subagent
+model: openai/gpt-5.6-luna
+permission:
+  bash: allow
+```
 
 ### Claude code
 
