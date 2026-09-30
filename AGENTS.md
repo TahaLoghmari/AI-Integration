@@ -65,7 +65,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## Subagents
 
-Fan out: keep the main context for coordination and implementation, and dispatch all reading, research, and querying to subagents, in parallel when the tasks are independent.
+Fan out: keep the main context for coordination and implementation, and dispatch all reading, research, and querying to subagents, in parallel when the tasks are independent. Run them in the foreground and block on them: every dispatched subagent has reported back before you act or answer.
 
 - Codebase (features, patterns, file locations) → `codebase-explorer`
 - External docs, APIs, libraries → `web-search`
