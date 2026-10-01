@@ -71,10 +71,8 @@ Fan out: keep the main context for coordination and implementation, and dispatch
 - External docs, APIs, libraries → `web-search`
 - Database queries → `db-query`
 
+## Agent skills
+
 ### Issue tracker
 
-Issues live as local markdown files under `.scratch/<feature-slug>/`. See `.scratch/issue-tracker.md`.
-
-### Triage labels
-
-Default canonical strings (`needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`). See `.scratch/triage-labels.md`.
+Issues and specs live as markdown files under `.scratch/`. See `docs/agents/issue-tracker.md`.
