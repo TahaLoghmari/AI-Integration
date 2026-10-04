@@ -69,7 +69,6 @@ Fan out: keep the main context for coordination and implementation, and dispatch
 
 - Codebase (features, patterns, file locations) → `codebase-explorer`
 - External docs, APIs, libraries → `web-search`
-- Database queries → `db-query`
 
 ## Agent skills
 

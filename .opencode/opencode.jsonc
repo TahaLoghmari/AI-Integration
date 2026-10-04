@@ -1,40 +1,26 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": [".opencode/AGENTS.md"],
-  "lsp": true,
-  "permission": {
-    "lsp": "allow",
-    "question": "allow",
-    "bash": {
-      "*": "allow",
-      "git commit *": "ask",
-      "git push *": "ask",
-      "git stash *": "ask",
-      "git reset *": "ask",
-      "git rebase *": "ask",
-      "git checkout *": "ask",
-      "git merge *": "ask",
-      "git clean *": "ask",
-      "rm *": "ask",
-      "mv *": "ask",
-      "sudo *": "ask",
-      "chmod *": "ask",
-      "chown *": "ask",
-      "kill *": "ask",
-      "docker *": "ask",
-      "curl *": "ask",
-      "wget *": "ask"
-    },
-    "edit": "allow",
-    "read": "allow",
-    "grep": "allow",
-    "glob": "allow",
-    "skill": "allow",
-    "todowrite": "allow",
-    "webfetch": "allow",
-    "websearch": "allow"
-  },
-  "experimental": {
-    "disable_paste_summary": true
+  "permissions": [
+    { "action": "shell", "resource": "git commit *", "effect": "ask" },
+    { "action": "shell", "resource": "git push *", "effect": "ask" },
+    { "action": "shell", "resource": "git stash *", "effect": "ask" },
+    { "action": "shell", "resource": "git reset *", "effect": "ask" },
+    { "action": "shell", "resource": "git rebase *", "effect": "ask" },
+    { "action": "shell", "resource": "git checkout *", "effect": "ask" },
+    { "action": "shell", "resource": "git merge *", "effect": "ask" },
+    { "action": "shell", "resource": "git clean *", "effect": "ask" },
+    { "action": "shell", "resource": "rm *", "effect": "ask" },
+    { "action": "shell", "resource": "mv *", "effect": "ask" },
+    { "action": "shell", "resource": "sudo *", "effect": "ask" },
+    { "action": "shell", "resource": "chmod *", "effect": "ask" },
+    { "action": "shell", "resource": "chown *", "effect": "ask" },
+    { "action": "shell", "resource": "kill *", "effect": "ask" },
+    { "action": "shell", "resource": "docker *", "effect": "ask" },
+    { "action": "shell", "resource": "curl *", "effect": "ask" },
+    { "action": "shell", "resource": "wget *", "effect": "ask" },
+  ],
+  "agents": {
+    "plan": { "disabled": true },
+    "explore": { "disabled": true }
   }
 }

@@ -3,14 +3,13 @@
 ### Opencode
 
 ```txt
+description: "Use proactively to gain context before acting: trace how a feature works, locate where code lives, or find exemplars to model new work after. Findings are orientation; verify in the source before any critical decision."
 mode: subagent
 model: openai/gpt-5.6-luna
-permission:
-  read: allow
-  grep: allow
-  glob: allow
-  lsp: allow
-  bash: allow
+permissions:
+  - action: edit
+    resource: "*"
+    effect: deny
 ```
 
 ### Claude Code
@@ -28,11 +27,19 @@ effort: `medium`;
 ### Opencode
 
 ```txt
+description: "Web research outside the codebase: library/API docs, current facts, usage examples. Use proactively when the answer lives on the web, not in local files."
 mode: subagent
 model: openai/gpt-5.6-terra
-permission:
-  webfetch: allow
-  websearch: allow
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
 ```
 
 ### Claude Code
@@ -41,35 +48,4 @@ permission:
 tools: (WebSearch, WebFetch);
 model: claude - sonnet - 4 - 6;
 effort: `medium`;
-```
-
-## db-query
-
-### Opencode
-
-```txt
-mode: subagent
-model: openai/gpt-5.6-luna
-permission:
-  bash: allow
-```
-
-### Claude code
-
-```jsx
-tools: (Glob, Grep, Read, Bash, LSP);
-model: claude - sonnet - 4 - 6;
-```
-
-### Github Copilot
-
-```jsx
-user-invocable: false
-target: vscode
-model: GPT-5.6 Luna (copilot)
-tools:
-- read/terminalLastCommand
-- execute/runInTerminal
-- execute/getTerminalOutput
-- read/terminalLastCommand
 ```
