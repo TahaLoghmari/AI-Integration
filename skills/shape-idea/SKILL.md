@@ -30,7 +30,6 @@ Pressure-test the page:
 - **Feasible?** What it needs: skills, time, tools, money.
 - **Riskiest assumption?** Name it.
 - **Already exists?** Search the web for alternatives when search is available.
-- **Cheapest test?** The smallest experiment that checks the riskiest assumption.
 
 Close with a verdict (**go**, **tweak**, or **rethink**), the reasons, and the single next step.
 
