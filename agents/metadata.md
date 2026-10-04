@@ -14,10 +14,10 @@ permissions:
 
 ### Claude Code
 
-```jsx
-tools: (Glob, Grep, Read, Bash, LSP);
-model: claude - sonnet - 4 - 6;
-effort: `medium`;
+```txt
+tools: Glob, Grep, Read, Bash, LSP
+model: claude-sonnet-4-6;
+effort: medium
 ```
 
 ---
@@ -44,8 +44,8 @@ permissions:
 
 ### Claude Code
 
-```jsx
-tools: (WebSearch, WebFetch);
-model: claude - sonnet - 4 - 6;
-effort: `medium`;
+```txt
+tools: WebSearch, WebFetch
+model: claude-sonnet-4-6
+effort: medium
 ```
