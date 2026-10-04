@@ -2,6 +2,11 @@
 
 A collection of skills and supporting guidance for AI coding agents. Skills live in `skills/`; agent instructions and repository guidance live in `agents/`, `docs/`, and the root-level Markdown files.
 
+## Installation
+```
+npx skills add TahaLoghmari/AI-Integration
+```
+
 ## Repository map
 
 - `skills/` — task-specific workflows and their reference files.
