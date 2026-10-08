@@ -5,7 +5,7 @@
 ```txt
 description: "Use proactively to gain context before acting: trace how a feature works, locate where code lives, or find exemplars to model new work after. Findings are orientation; verify in the source before any critical decision."
 mode: subagent
-model: openai/gpt-5.6-luna
+model: openai/gpt-6-luna
 permissions:
   - action: edit
     resource: "*"
@@ -16,7 +16,7 @@ permissions:
 
 ```txt
 tools: Glob, Grep, Read, Bash, LSP
-model: claude-sonnet-4-6;
+model: claude-haiku-5-5;
 effort: medium
 ```
 
@@ -29,7 +29,7 @@ effort: medium
 ```txt
 description: "Web research outside the codebase: library/API docs, current facts, usage examples. Use proactively when the answer lives on the web, not in local files."
 mode: subagent
-model: openai/gpt-5.6-terra
+model: openai/gpt-6-terra
 permissions:
   - action: "*"
     resource: "*"
@@ -46,6 +46,6 @@ permissions:
 
 ```txt
 tools: WebSearch, WebFetch
-model: claude-sonnet-4-6
+model: claude-haiku-5-5
 effort: medium
 ```
