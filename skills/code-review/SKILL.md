@@ -5,7 +5,19 @@ description: >
 disable-model-invocation: true
 ---
 
-Two-axis review of the diff since a fixed point the user provides, or if not provided between current code and main (run `git diff main...HEAD`):
+Two-axis review of the diff since a fixed point the user provides (a commit, tag, or branch). If none is provided, review the changes between the current code and the remote default branch.
+
+**Getting the diff**
+
+1. Resolve the base: the user's fixed point if given, otherwise the default branch (`git symbolic-ref --short refs/remotes/origin/HEAD`, e.g. `origin/main`).
+2. Run `git diff --stat <base>...HEAD` to see which files changed and how large the change is.
+3. Run `git diff --no-color -U10 -M <base>...HEAD` to read the diff.
+   - If the diff is very large, go file by file with `git diff --no-color -U10 <base>...HEAD -- <path>`.
+   - Skip lockfiles, snapshots, and generated or minified files.
+4. If a hunk lacks enough context to judge, read the full file with `git show HEAD:<path>`.
+5. Run `git log <base>..HEAD` to read commit messages and understand intent.
+
+**The two axes**
 
 - **Code Quality & Regression**: does the code conform to this repo's coding standards and patterns, and did the changes preserve existing functionality without introducing regressions?
 - **Spec**: does the code faithfully implement the originating issue / spec?
