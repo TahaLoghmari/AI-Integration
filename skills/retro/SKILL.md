@@ -1,6 +1,6 @@
 ---
 name: retro
-description: "Retrospective on a coding session and the repo's history: find the mistakes agents keep repeating and make each one impossible. Repeat each time the operator corrects you. Use for /retro."
+description: "Retrospective on the current coding session: find the mistakes agents keep repeating and make each one impossible. Repeat each time the operator corrects you. Use for /retro."
 disable-model-invocation: true
 ---
 
@@ -14,7 +14,7 @@ Assume every contributor is an agent that sees only the files it opened, copies 
 
 1. Call the Skill tool with `writing-for-agents` for the writing style guide.
 
-2. Gather evidence: the current session, recent commits, reverts, review comments, agent instruction files, and comments that explain workarounds. Group the mistakes into **classes**. A class counts once it has happened twice.
+2. Gather evidence from the current session only. Group the mistakes into **classes**. A class counts once it has happened twice.
 
 3. Look for candidates for improvement in these categories.
 
