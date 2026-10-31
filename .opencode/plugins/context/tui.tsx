@@ -1,16 +1,8 @@
 import { Plugin } from "@opencode/plugin/tui"
 import type { PanelInput } from "@opencode/plugin/tui/context"
-import { relative } from "node:path"
 import { createSignal, For, Show } from "solid-js"
-import { ContextReport } from "./rpc"
-
-type Snapshot = {
-  sources?: { name: string; characters: number }[]
-  instructionFiles?: string[]
-}
 
 const number = (value: number) => Math.round(value).toLocaleString()
-const estimate = (characters: number) => `~${number(characters / 4)}`
 type Section = { title: string; lines: string[]; note?: string }
 const list = (items: string[]) => items.length ? items : ["None available"]
 
@@ -76,10 +68,7 @@ export default Plugin.define({
           data.agent.sync(location), data.skill.sync(location), data.reference.sync(location),
           data.mcp.server.sync(location), context.data.session.message.sync(sessionID),
         ])
-        const [plugins, snapshot] = await Promise.all([
-          context.client.plugin.list({ location }),
-          context.client.rpc(ContextReport).snapshot({ sessionID }, { location }) as Promise<Snapshot>,
-        ])
+        const plugins = await context.client.plugin.list({ location })
         const messages = context.data.session.message.list(sessionID) ?? []
         const last = [...messages].reverse().find((message) => message.type === "assistant" && message.tokens)
         const usage = last?.type === "assistant" ? last.tokens : undefined
@@ -96,14 +85,6 @@ export default Plugin.define({
               `Cache read  ${number(usage.cache.read)}`,
               `Cache write ${number(usage.cache.write)}`,
             ] : ["Not available"],
-          },
-          {
-            title: "Instruction sources",
-            lines: list([
-              ...(snapshot.instructionFiles ?? []).map((path) => `File: ${relative(location.directory, path) || "."}`),
-              ...(snapshot.sources ?? []).map((source) => `${estimate(source.characters)}  ${source.name}`),
-            ]),
-            note: "Files are included in core/instructions, not additional tokens. Experimental metadata may omit sources.",
           },
           {
             title: "Available agents",
