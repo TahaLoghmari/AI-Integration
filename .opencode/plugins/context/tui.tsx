@@ -1,15 +1,10 @@
 import { Plugin } from "@opencode/plugin/tui"
 import type { PanelInput } from "@opencode/plugin/tui/context"
+import { relative } from "node:path"
 import { createSignal, For, Show } from "solid-js"
 import { ContextReport } from "./rpc"
 
 type Snapshot = {
-  capturedAt?: number
-  model?: { providerID: string; id: string }
-  systemCharacters?: number
-  messageCharacters?: number
-  toolCharacters?: number
-  tools?: string[]
   sources?: { name: string; characters: number }[]
   instructionFiles?: string[]
 }
@@ -79,8 +74,7 @@ export default Plugin.define({
       try {
         await Promise.all([
           data.agent.sync(location), data.skill.sync(location), data.reference.sync(location),
-          data.mcp.server.sync(location), data.model.sync(location),
-          context.data.session.sync(sessionID), context.data.session.message.sync(sessionID),
+          data.mcp.server.sync(location), context.data.session.message.sync(sessionID),
         ])
         const [plugins, snapshot] = await Promise.all([
           context.client.plugin.list({ location }),
@@ -89,28 +83,11 @@ export default Plugin.define({
         const messages = context.data.session.message.list(sessionID) ?? []
         const last = [...messages].reverse().find((message) => message.type === "assistant" && message.tokens)
         const usage = last?.type === "assistant" ? last.tokens : undefined
-        const models = data.model.list(location) ?? []
-        const model = models.find((item) => item.id === snapshot.model?.id && item.providerID === snapshot.model?.providerID)
-        const system = snapshot.systemCharacters ?? 0
-        const conversation = snapshot.messageCharacters ?? 0
-        const tools = snapshot.toolCharacters ?? 0
-        const estimated = (system + conversation + tools) / 4
-        const limit = model?.limit.context
-        const blocks = limit ? Math.max(0, Math.min(20, Math.round(estimated / limit * 20))) : 0
         const agents = data.agent.list(location) ?? []
         const skills = data.skill.list(location) ?? []
         const references = data.reference.list(location) ?? []
         const servers = data.mcp.server.list(location) ?? []
         setReport([
-          {
-            title: "Last request",
-            lines: snapshot.capturedAt ? [
-              `${estimate(system + conversation + tools)} estimated tokens`,
-              ...(limit ? [`${number(limit)} token context limit`, `[${"■".repeat(blocks)}${"·".repeat(20 - blocks)}] ${number(estimated / limit * 100)}%`] : []),
-              snapshot.model ? `${snapshot.model.providerID}/${snapshot.model.id}` : "Model unavailable",
-            ] : ["No request captured since the plugin loaded.", "Send a message, then reopen this report."],
-            note: snapshot.capturedAt ? `Captured at ${new Date(snapshot.capturedAt).toLocaleTimeString()}. Later hooks may change the request.` : undefined,
-          },
           {
             title: "Provider-reported usage",
             lines: usage ? [
@@ -121,23 +98,13 @@ export default Plugin.define({
             ] : ["Not available"],
           },
           {
-            title: "Estimated breakdown",
-            lines: snapshot.capturedAt ? [
-              `System text      ${estimate(system)}`,
-              `Conversation     ${estimate(conversation)}`,
-              `Tool definitions ${estimate(tools)}`,
-            ] : ["Send a message to capture a request."],
-            note: snapshot.capturedAt ? "Roughly 4 characters per token; conversation and tools use serialized data. Multimodal content is not measured." : undefined,
-          },
-          {
             title: "Instruction sources",
             lines: list([
-              ...(snapshot.instructionFiles ?? []).map((path) => `File: ${path}`),
+              ...(snapshot.instructionFiles ?? []).map((path) => `File: ${relative(location.directory, path) || "."}`),
               ...(snapshot.sources ?? []).map((source) => `${estimate(source.characters)}  ${source.name}`),
             ]),
             note: "Files are included in core/instructions, not additional tokens. Experimental metadata may omit sources.",
           },
-          { title: "Tools in last request", lines: list(snapshot.tools ?? []) },
           {
             title: "Available agents",
             lines: list(agents.filter((agent) => !agent.hidden).map((agent) => `${agent.id} (${agent.mode})`)),
