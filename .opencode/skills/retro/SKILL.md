@@ -2,6 +2,8 @@
 name: retro
 description: "Retrospective on the current coding session: find the mistakes agents keep repeating and make each one impossible. Repeat each time the operator corrects you. Use for /retro."
 disable-model-invocation: true
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Retro

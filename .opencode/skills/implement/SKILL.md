@@ -2,6 +2,8 @@
 name: implement
 description: Implement a task idiomatically, verified by typecheck and tests
 disable-model-invocation: true
+metadata:
+  opencode/autoinvoke: false
 ---
 
 Implement the task the user gave.

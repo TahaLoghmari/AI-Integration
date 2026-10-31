@@ -2,6 +2,8 @@
 name: task-implemented
 description: Writes task-implemented.md at the repo root, recovering the task just completed from the conversation into a stakeholder-readable record for a reviewer. Use when the user asks to record what was implemented, or when the code-review skill needs a task-implemented.md that doesn't yet exist.
 disable-model-invocation: true
+metadata:
+  opencode/autoinvoke: false
 ---
 
 There's no written ticket for this task: the conversation is the ticket. Recover the task from it in a form a non-technical stakeholder would recognize; the reviewer agent pulls the technical diff from git itself.

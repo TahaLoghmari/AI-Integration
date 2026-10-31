@@ -1,6 +1,9 @@
 ---
 name: shape-idea
 description: Shape a loose idea into a clear, validated one. Use when the user brings a half-formed idea, concept, or project to brainstorm, clarify, research, extend, or sanity-check.
+disable-model-invocation: true
+metadata:
+  opencode/autoinvoke: false
 ---
 
 Act as a thinking partner. Work in conversation: short turns, one question at a time, the idea sharpens through dialogue. Say plainly where the idea is weak. Step 2 is the one long turn: research first, then report.

@@ -1,6 +1,9 @@
 ---
 name: visual-pr
 description: Only use when the user explicitly invokes this skill by name.
+disable-model-invocation: true
+metadata:
+  opencode/autoinvoke: false
 ---
 
 # Describe a Pull Request
