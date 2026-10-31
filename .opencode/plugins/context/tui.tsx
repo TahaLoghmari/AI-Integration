@@ -1,6 +1,6 @@
 import { Plugin } from "@opencode/plugin/tui"
 import type { PanelInput } from "@opencode/plugin/tui/context"
-import { createSignal, Show } from "solid-js"
+import { createSignal, For, Show } from "solid-js"
 import { ContextReport } from "./rpc"
 
 type Snapshot = {
@@ -15,12 +15,13 @@ type Snapshot = {
 
 const number = (value: number) => Math.round(value).toLocaleString()
 const estimate = (characters: number) => `~${number(characters / 4)}`
-const list = (items: string[]) => items.length ? items.map((item) => `  ${item}`).join("\n") : "  None available"
+type Section = { title: string; lines: string[]; note?: string }
+const list = (items: string[]) => items.length ? items : ["None available"]
 
 export default Plugin.define({
   id: "project.context.tui",
   setup(context) {
-    const [report, setReport] = createSignal("Loading context report…")
+    const [report, setReport] = createSignal<Section[]>([{ title: "Loading", lines: ["Gathering context…"] }])
     function ReportPanel(props: { panel: PanelInput }) {
       context.keymap.layer(() => ({
         commands: [{
@@ -31,11 +32,27 @@ export default Plugin.define({
         }],
       }))
       return (
-        <scrollbox focused={props.panel.focused} height="100%" width="100%">
-          <box paddingLeft={1} paddingRight={1} paddingTop={1}>
-            <text fg={context.theme.text.base}>{report()}</text>
+        <box height="100%" width="100%" flexDirection="column">
+          <box paddingLeft={1} paddingRight={1} paddingTop={1} paddingBottom={1}>
+            <text fg={context.theme.text.base}><b>Context</b></text>
+            <text fg={context.theme.text.muted}>Esc to close</text>
           </box>
-        </scrollbox>
+          <scrollbox focused={props.panel.focused} flexGrow={1} width="100%">
+            <box paddingLeft={1} paddingRight={1} paddingBottom={1}>
+              <For each={report()}>{(section) => (
+                <box paddingBottom={1} width="100%">
+                  <text fg={context.theme.text.base} wrapMode="word"><b>{section.title}</b></text>
+                  <For each={section.lines}>{(line) => (
+                    <text fg={context.theme.text.base} wrapMode="char">{line}</text>
+                  )}</For>
+                  <Show when={section.note}>
+                    <text fg={context.theme.text.muted} wrapMode="word">{section.note}</text>
+                  </Show>
+                </box>
+              )}</For>
+            </box>
+          </scrollbox>
+        </box>
       )
     }
     const unregister = context.ui.slot({
@@ -56,7 +73,7 @@ export default Plugin.define({
       const sessionID = route.sessionID
       const location = context.location ?? context.data.location.default()
       const data = context.data.location
-      setReport("Loading context report…")
+      setReport([{ title: "Loading", lines: ["Gathering context…"] }])
       context.ui.panel.open("project.context.report")
       try {
         await Promise.all([
@@ -84,50 +101,56 @@ export default Plugin.define({
         const references = data.reference.list(location) ?? []
         const servers = data.mcp.server.list(location) ?? []
         setReport([
-          "Context report · Esc to close",
-          "════════════════════════════════════════",
-          snapshot.capturedAt ? `Last request snapshot · ${new Date(snapshot.capturedAt).toLocaleTimeString()}` : "No request captured yet. Send a message, then reopen this report.",
-          snapshot.model ? `Model  ${snapshot.model.providerID}/${snapshot.model.id}` : "Model  unavailable",
-          snapshot.capturedAt ? `Estimated request  ${estimate(system + conversation + tools)} tokens${limit ? ` / ${number(limit)} context limit` : ""}` : "Estimated request  unavailable",
-          limit && snapshot.capturedAt ? `[${"■".repeat(blocks)}${"·".repeat(20 - blocks)}]  ${number(estimated / limit * 100)}% estimated` : "",
-          "",
-          "Last assistant usage (provider reported)",
-          usage ? `  Input ${number(usage.input)}  ·  output ${number(usage.output)}\n  Cache read ${number(usage.cache.read)}  ·  cache write ${number(usage.cache.write)}` : "  Not available",
-          "  Provider input and cache accounting may overlap or differ.",
-          "",
-          "Request breakdown · rough estimates",
-          snapshot.capturedAt ? `  System text       ${estimate(system)} tokens\n  Conversation      ${estimate(conversation)} tokens\n  Tool definitions  ${estimate(tools)} tokens` : "  Not captured",
-          "  Heuristic: 4 characters per token; conversation and tools use",
-          "  serialized request data. Multimodal content is not measured.",
-          "",
-          "Instruction sources · estimated tokens",
-          list((snapshot.sources ?? []).map((source) => `${estimate(source.characters).padStart(8)}  ${source.name}`)),
-          "  Experimental source metadata; may not include every instruction",
-          "  or memory source. Sources are part of system text, not extra.",
-          "",
-          "Tools in last captured request",
-          list(snapshot.tools ?? []),
-          "",
-          "Available agents · not necessarily in the request",
-          list(agents.filter((agent) => !agent.hidden).map((agent) => `${agent.id} (${agent.mode})`)),
-          "",
-          "Available skills · not necessarily loaded",
-          list(skills.map((skill) => `${skill.id}  ${skill.path}`)),
-          "",
-          "References",
-          list(references.map((reference) => `${reference.name}  ${reference.path}`)),
-          "",
-          "MCP servers",
-          list(servers.map((server) => `${server.name} (${server.status.status})`)),
-          "",
-          "Server plugins",
-          list(plugins.data.map((plugin) => plugin.id ?? "(unnamed)")),
-          "",
-          "Snapshot reflects the last observed request, not a prediction of the",
-          "next request. Later plugin hooks may change the outgoing request.",
-        ].filter((line) => line !== undefined).join("\n"))
+          {
+            title: "Last request",
+            lines: snapshot.capturedAt ? [
+              `${estimate(system + conversation + tools)} estimated tokens`,
+              ...(limit ? [`${number(limit)} token context limit`, `[${"■".repeat(blocks)}${"·".repeat(20 - blocks)}] ${number(estimated / limit * 100)}%`] : []),
+              snapshot.model ? `${snapshot.model.providerID}/${snapshot.model.id}` : "Model unavailable",
+            ] : ["No request captured yet.", "Send a message, then reopen this report."],
+            note: snapshot.capturedAt ? `Captured at ${new Date(snapshot.capturedAt).toLocaleTimeString()}. Later hooks may change the request.` : undefined,
+          },
+          {
+            title: "Provider-reported usage",
+            lines: usage ? [
+              `Input       ${number(usage.input)}`,
+              `Output      ${number(usage.output)}`,
+              `Cache read  ${number(usage.cache.read)}`,
+              `Cache write ${number(usage.cache.write)}`,
+            ] : ["Not available"],
+            note: "Latest assistant message. Provider input and cache accounting may overlap or differ.",
+          },
+          {
+            title: "Estimated breakdown",
+            lines: snapshot.capturedAt ? [
+              `System text      ${estimate(system)}`,
+              `Conversation     ${estimate(conversation)}`,
+              `Tool definitions ${estimate(tools)}`,
+            ] : ["Not captured"],
+            note: "Roughly 4 characters per token; conversation and tools use serialized data. Multimodal content is not measured.",
+          },
+          {
+            title: "Instruction sources",
+            lines: list((snapshot.sources ?? []).map((source) => `${estimate(source.characters)}  ${source.name}`)),
+            note: "Estimated tokens within system text. Experimental metadata may omit instruction or memory sources.",
+          },
+          { title: "Tools in last request", lines: list(snapshot.tools ?? []) },
+          {
+            title: "Available agents",
+            lines: list(agents.filter((agent) => !agent.hidden).map((agent) => `${agent.id} (${agent.mode})`)),
+            note: "Available does not mean included in the request.",
+          },
+          {
+            title: "Available skills",
+            lines: list(skills.map((skill) => skill.id)),
+            note: "Available does not mean loaded.",
+          },
+          { title: "References", lines: list(references.flatMap((reference) => [reference.name, `  ${reference.path}`])) },
+          { title: "MCP servers", lines: list(servers.map((server) => `${server.name} (${server.status.status})`)) },
+          { title: "Server plugins", lines: list(plugins.data.map((plugin) => plugin.id ?? "(unnamed)")) },
+        ])
       } catch (error) {
-        setReport(`Context report could not load.\n\n${String(error)}`)
+        setReport([{ title: "Could not load context", lines: [String(error)] }])
       }
     }
 
