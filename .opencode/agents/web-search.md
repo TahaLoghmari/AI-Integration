@@ -1,6 +1,18 @@
 ---
 name: web-search
 description: "Web research outside the codebase: library/API docs, current facts, usage examples. Use proactively when the answer lives on the web, not in local files."
+mode: subagent
+model: openai/gpt-6-luna
+permissions:
+  - action: "*"
+    resource: "*"
+    effect: deny
+  - action: webfetch
+    resource: "*"
+    effect: allow
+  - action: websearch
+    resource: "*"
+    effect: allow
 ---
 
 Answer the parent's question from the web. Your reply is all the parent sees, so make it self-contained.

@@ -14,7 +14,9 @@ Assume every contributor is an agent that sees only the files it opened, copies 
 
 1. Call the Skill tool with `writing-for-agents` for the writing style guide.
 
-2. Gather evidence from the current session only. Group the mistakes into **classes**. A class counts once it has happened twice.
+2. Gather evidence from the current session only. Group the mistakes into **classes**.
+
+   Assess repeatable workflows separately: one difficult execution can justify a skill when the task recurs frequently and the recovered procedure would help a future agent.
 
 3. Look for candidates for improvement in these categories.
 
@@ -25,6 +27,7 @@ Assume every contributor is an agent that sees only the files it opened, copies 
    - **Tool economy**: did the agent make expensive tool calls that could be streamlined? Is there any custom tooling (CLI's, MCP's) that is particularly token-inefficient? _Use when_ the agent made an expensive tool call.
    - **No-ops**: look for instructions in steering files that don't modify the agent's behavior. _Use when_ the steering files are large and unwieldy.
    - **Information access**: look for opportunities to increase the agent's access to information. Teeing dev server logs, readonly access to third-party services. _Use when_ a crucial piece of information was not available to the agent.
+   - **Repeatable workflows**: did the agent struggle with a frequently repeated task or miss required steps or files? Alongside applicable guardrails, capture the verified procedure in a model-invoked skill, updating an existing matching skill or creating one. Include the trigger, ordered steps, easy-to-miss integration points, and completion checks so a future agent can cover every required surface. _Use when_ the session exposed hard-won workflow knowledge worth reusing.
 
 4. Fix each mistake class at the highest rung of the **ladder** that works:
 
@@ -33,11 +36,11 @@ Assume every contributor is an agent that sees only the files it opened, copies 
    3. **Test the behavior.** Fix or delete any test that still passes when the behavior it checks breaks, or that fails when only the internals change.
    4. **Write docs or agent rules last, only for judgement calls** (cross-file consistency, "matches the surrounding style," anything no guardrail could ever substitute for). Nothing fails when an agent skips them. Rules go in `CODING_STANDARDS.md`.
 
-5. Fix the most frequent classes now, one commit each. Prove each new check fails on a real past mistake. Run the same command locally and in CI. Exceptions go on the offending line with a reason, an expiry date, and a human's approval.
+5. **Present** before changing any file: reply with the candidates in order of severity, plus anything else you found along the way. For each mistake class: its evidence, the level you picked, and why a higher level didn't work. End by asking which candidates to implement, then wait for the operator's pick.
 
-6. Keep a table in `CODING_STANDARDS.md` that pairs each rule with what enforces it. When the operator corrects you, fix the mistake and add the rule. If the rule was already there and nothing enforces it, that's a repeat, so fix it at the highest rung in the same change. Drop a rule once its mistake can't happen.
+6. Fix the picked classes, one commit each. Prove each new check fails on a real past mistake. Run the same command locally and in CI. Exceptions go on the offending line with a reason, an expiry date, and a human's approval.
 
-7. **Reply** with the candidates in order of severity. For each mistake class: its evidence, the level you picked, and why a higher level didn't work.
+7. Keep a table in `CODING_STANDARDS.md` that pairs each rule with what enforces it. When the operator corrects you, fix the mistake and add the rule. If the rule was already there and nothing enforces it, that's a repeat, so fix it at the highest rung in the same change. Drop a rule once its mistake can't happen.
 
 ## Reference
 
@@ -54,6 +57,6 @@ This means that the review agent should be responsible for imposing coding stand
 You have access to several files in the repo:
 
 - `CLAUDE.md`/`AGENTS.md`: these files are pushed to the context window of any agent working in this repo. They should be used incredibly sparingly, usually only for **navigation pointers** to other files.
-- `CODING_STANDARDS.md`: this file is read during review, not implementation. It holds the rule table (step 6). Add **navigation pointers** to docs folders if the standards file gets more than 1,000 lines long.
+- `CODING_STANDARDS.md`: this file is read during review, not implementation. It holds the rule table (step 7). Add **navigation pointers** to docs folders if the standards file gets more than 1,000 lines long.
 - Docs: use docs as references files, pointed to by other files. Look for existing docs before writing new ones.
 - Skills: use skills for docs (since their description goes into the agent's context window), or for user-invoked commands. Follow the advice in the `writing-for-agents` skill.
