@@ -11,6 +11,7 @@ type Snapshot = {
   toolCharacters?: number
   tools?: string[]
   sources?: { name: string; characters: number }[]
+  instructionFiles?: string[]
 }
 
 const number = (value: number) => Math.round(value).toLocaleString()
@@ -107,7 +108,7 @@ export default Plugin.define({
               `${estimate(system + conversation + tools)} estimated tokens`,
               ...(limit ? [`${number(limit)} token context limit`, `[${"■".repeat(blocks)}${"·".repeat(20 - blocks)}] ${number(estimated / limit * 100)}%`] : []),
               snapshot.model ? `${snapshot.model.providerID}/${snapshot.model.id}` : "Model unavailable",
-            ] : ["No request captured yet.", "Send a message, then reopen this report."],
+            ] : ["No request captured since the plugin loaded.", "Send a message, then reopen this report."],
             note: snapshot.capturedAt ? `Captured at ${new Date(snapshot.capturedAt).toLocaleTimeString()}. Later hooks may change the request.` : undefined,
           },
           {
@@ -118,7 +119,6 @@ export default Plugin.define({
               `Cache read  ${number(usage.cache.read)}`,
               `Cache write ${number(usage.cache.write)}`,
             ] : ["Not available"],
-            note: "Latest assistant message. Provider input and cache accounting may overlap or differ.",
           },
           {
             title: "Estimated breakdown",
@@ -126,24 +126,25 @@ export default Plugin.define({
               `System text      ${estimate(system)}`,
               `Conversation     ${estimate(conversation)}`,
               `Tool definitions ${estimate(tools)}`,
-            ] : ["Not captured"],
-            note: "Roughly 4 characters per token; conversation and tools use serialized data. Multimodal content is not measured.",
+            ] : ["Send a message to capture a request."],
+            note: snapshot.capturedAt ? "Roughly 4 characters per token; conversation and tools use serialized data. Multimodal content is not measured." : undefined,
           },
           {
             title: "Instruction sources",
-            lines: list((snapshot.sources ?? []).map((source) => `${estimate(source.characters)}  ${source.name}`)),
-            note: "Estimated tokens within system text. Experimental metadata may omit instruction or memory sources.",
+            lines: list([
+              ...(snapshot.instructionFiles ?? []).map((path) => `File: ${path}`),
+              ...(snapshot.sources ?? []).map((source) => `${estimate(source.characters)}  ${source.name}`),
+            ]),
+            note: "Files are included in core/instructions, not additional tokens. Experimental metadata may omit sources.",
           },
           { title: "Tools in last request", lines: list(snapshot.tools ?? []) },
           {
             title: "Available agents",
             lines: list(agents.filter((agent) => !agent.hidden).map((agent) => `${agent.id} (${agent.mode})`)),
-            note: "Available does not mean included in the request.",
           },
           {
             title: "Available skills",
             lines: list(skills.map((skill) => skill.id)),
-            note: "Available does not mean loaded.",
           },
           { title: "References", lines: list(references.flatMap((reference) => [reference.name, `  ${reference.path}`])) },
           { title: "MCP servers", lines: list(servers.map((server) => `${server.name} (${server.status.status})`)) },

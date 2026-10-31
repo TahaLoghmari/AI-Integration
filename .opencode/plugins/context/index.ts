@@ -9,12 +9,18 @@ export default Plugin.define({
     await ctx.session.hook("context", (event) => {
       try {
         const sources: { name: string; characters: number }[] = []
+        const instructionFiles: string[] = []
         for (const part of event.system) {
           const instructions = part.metadata?.experimental?.instructions
           if (Array.isArray(instructions)) {
             for (const source of instructions) {
               if (typeof source.key === "string" && typeof source.text === "string") {
                 sources.push({ name: source.key, characters: source.text.length })
+                if (source.key === "core/instructions") {
+                  for (const match of source.text.matchAll(/^Instructions from: ([^\r\n]+)\r?$/gm)) {
+                    instructionFiles.push(match[1])
+                  }
+                }
               }
             }
           }
@@ -27,6 +33,7 @@ export default Plugin.define({
           toolCharacters: JSON.stringify(event.tools).length,
           tools: Object.keys(event.tools),
           sources,
+          instructionFiles,
         })
       } catch {
         // A reporting failure must never prevent the model request.
