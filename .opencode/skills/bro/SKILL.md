@@ -1,9 +1,9 @@
 ---
 name: bro
-description: Restate the last message in plain human language, with no jargon.
+description: State the message in plain human language, with no jargon.
 disable-model-invocation: true
 metadata:
   opencode/autoinvoke: false
 ---
 
-Restate your last message. Stop using jargon and speak coherently. State it more simply and concisely, like one human talking to another.
+State the message without using jargon and speak coherently. State it simply and concisely, like one human talking to another.
